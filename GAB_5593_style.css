@@ -1,0 +1,402 @@
+/* Main HTML elements */
+body {
+	overflow: hidden;
+	background: url('GCG_42668_shop-floor_bckgrd.png');	
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+    background-position: left bottom; 
+}
+
+img {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* Links */
+a:link {
+	text-decoration: none;
+	color: #8BC53F;
+}
+a:visited {
+	text-decoration: none;
+	color: #8FC735;
+}
+s {
+	text-decoration: none;
+	color: #909193;
+}
+a:active {
+	text-decoration: none;
+}
+
+/* Layout */
+
+.MainDiv {
+	position: absolute;
+	top: 180px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+/* Top section (Title and logos)*/
+.FF_hdr {
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 44px;
+	font-weight:600;
+	color: #414042;
+	letter-spacing: 2px;
+	margin-top: 0px;
+	margin-bottom: -12px;
+	line-height: 50px;
+	text-align: Left;
+	text-transform: uppercase;
+	white-space: nowrap;
+	
+}
+#FF_hdr_light {
+	color: #B7B7B9;
+}
+th {
+	font-size:32px;
+}
+.imgCust {
+	 width: 459; 
+	 height: 55;
+}
+.imgGSSLogo {
+	float: right;
+	width: 350px; 
+	height: 125px;
+	content:url('globshopnew2017.png');	
+}
+.customer_hdr_LINK {
+	color: #007550;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 15px;
+	margin-top: 0px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	margin-right: 21px;
+}
+.customer_hdr {
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 12px;
+	color: #6F7073;
+	margin-left: 0px;
+	margin-right: 25px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	text-align: right;
+}
+.TopTable {
+	position: absolute;
+	left: 0px;
+	top:0px;
+		
+	width: 100%;
+	height: 140px;
+	border-collapse: collapse;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic", "Calibri Light";	
+}
+.TopTable td {
+	padding:10px;
+}
+
+/* Data header */
+.HDRtable {
+	position: absolute;
+	width: 100%;
+    left:0px;
+	top: 140px;
+	height:40px;
+	border-collapse: collapse;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic", "Calibri Light";
+	color: #FFFFFF;
+	letter-spacing: 1px;
+	font-size: 13px;
+	text-align: center;
+	text-transform:uppercase;
+
+}
+.HDRtable td {
+	border-collapse:collapse;  
+	background: #000;	
+    border-bottom: 1px solid #0066ff;
+}
+/* provide some minimal visual accomodation for IE8 and below */
+.HDRtable tr {
+	border-collapse:collapse;  		
+}
+.HDRtable td:nth-child(1) {
+	width: 5%;
+    background-color:transparent;
+    border: none;
+}	
+.HDRtable td:nth-last-child(1) {
+	width: 5%;
+    background-color:transparent;
+    border: none;
+}	
+/*  Curve background on first and last cell  */
+.HDRtable td:nth-child(2) { 
+	border-radius: 22px 0 0 0;
+	background: #000;
+}
+.HDRtable td:nth-last-child(2) { 
+	border-radius: 0 22px 0 0 ;
+	background: #000;
+}	
+.Empty{
+	height: 0px;
+}
+.Last{
+	height: 0px;
+}
+/* Data table */
+.TFtable {
+	position: absolute;
+	width: 100%;
+	left:0px;
+	top:0px;
+	border-collapse: collapse;
+	color: #3B3B3B;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic", "Calibri Light";
+	font-size: 10px;
+	height: 20px;
+	min-width: 0px;
+	min-height: 18px;
+
+}
+.TFtable td.data-cell {
+	height: 0px;
+	font-size: 32px;
+	text-align: center;
+	white-space: nowrap;
+
+}
+/* Adding some additional classes for background colors to be different on some fields*/
+.TFtable td.red-cells {
+	height: 0px;
+	text-align: center;
+	color: white;
+	background-color:#FF0000;
+}
+.TFtable td.orange-cells {
+	height: 0px;
+	text-align: center;
+	background-color:#FFA500;
+}
+.TFtable td.yellow-cells {
+	height: 0px;
+	text-align: center;
+	background-color:#FFFF00;
+}
+.TFtable td.mist-cells {
+	height: 0px;
+	text-align: center;
+	background-color:#E6E6FA;
+}
+.TFtable td.blue-cells {
+	height: 0px;
+	text-align: center;
+	color: white;
+	background-color:#0000FF;
+}
+.TFtable td.gray-cells {
+	height: 0px;
+	text-align: center;
+	background-color:#808080;
+}
+.TFtable td.cyan-cells {
+	height: 0px;
+	text-align: center;
+	background-color:#00FFFF;
+}
+.TFtable td.magenta-cells {
+	height: 0px;
+	text-align: center;
+	background-color:#FF00FF;
+}
+
+
+
+.TFtable td:nth-child(1) {
+	width: 1%;
+}	
+/* provide some minimal visual accomodation for IE8 and below */
+.TFtable tr {
+	background: #b8d1f3;
+	height: 20px;
+}
+/*  Define the background color for all the ODD background rows  */
+.TFtable tr:nth-child(odd) { 
+		background: none;
+}
+/*  Define the background color for all the EVEN background rows  */
+.TFtable tr:nth-child(even) {
+	background: #E6E7E8;
+	background: rgb(221, 222, 223); /* Fall-back for browsers that don't support rgba */
+    background: rgba(221, 222, 223, .5);
+}
+
+/* Footer */
+.small_links {
+	position: fixed;
+	bottom: 14px;
+	right: 0px;
+	color: #FFFFFF;
+	font-size: 12px;
+	text-align: right;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic", "Calibri Light";
+	letter-spacing: 1px;
+	margin-right: 41pt;
+	margin-top: -3px;
+}
+
+/* Sir Not Appearing in this Film */
+.customer_ftr {
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 12px;
+	color: #FFFFFF;
+	margin-left: 0px;
+	margin-right: 25px;
+	margin-top: 7px;
+}
+
+.topics_description {
+	color: #6F7073;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 11px;
+	margin-top: 0px;
+	letter-spacing: 0px;
+	line-height: 11px;
+}
+.customer_ftr_lgt-blue {
+	color: #6D8BA0;
+}
+.discussion_topics {
+	color: #FFFFFF;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 22px;
+	letter-spacing: 1px;
+	font-weight: normal;
+}
+.discussion_topics_GREEN {
+	color: #007550;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 22px;
+	letter-spacing: 1px;
+	font-weight: normal;
+	margin-left: 50px;
+}
+.topics_list {
+	color: #8C8D8F;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic";
+	font-size: 14px;
+	margin-top: -10px;
+	margin-right: 21px;
+	text-align: right;
+	
+}
+.topics_list_numbers {
+	color: #6D8BA0;
+	font-weight: bold;
+}
+.small_links1 {	font-family: Arial, Helvetica, sans-serif;
+	color: #0C3E61;
+	font-size: 10px;
+	margin-right: 41px;
+}
+.Sumtable {
+
+	width: 100%;
+	left:0px;
+	top:0px;
+	border-collapse: collapse;
+	color: #3B3B3B;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic", "Calibri Light";
+	font-size: 15px;
+	height: 20px;
+	min-width: 0px;
+	min-height: 18px;
+	text-align: center;
+
+}
+.Sumtable td.data-cell-Sum {
+	
+	text-align: center;
+}
+.Sumtable td:nth-child(1) {
+	width: 1%;
+}	
+/* provide some minimal visual accomodation for IE8 and below */
+.Sumtable tr {
+	background: #b8d1f3;
+	height: 20px;
+}
+/*  Define the background color for all the ODD background rows  */
+.Sumtable tr:nth-child(odd) { 
+		background: none;
+}
+/*  Define the background color for all the EVEN background rows  */
+.Sumtable tr:nth-child(even) {
+	background: #E6E7E8;
+	background: rgb(221, 222, 223); /* Fall-back for browsers that don't support rgba */
+    background: rgba(221, 222, 223, .5);
+}
+.SumDiv {
+	position: absolute;
+	bottom: 60px;
+	left:25%;
+	width:50%;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+.SumHeadtable {
+	position: absolute;
+	width: 50%;
+	left:25%;
+	/*top: 140px; */
+	bottom:120px;
+	height:40px;
+	border-collapse: collapse;
+	font-family: Calibri, "Calibri Bold", "Calibri Bold Italic", "Calibri Italic", "Calibri Light";
+	color: #FFFFFF;
+	letter-spacing: 1px;
+	font-size: 15px;
+	text-align: center;
+	text-transform:uppercase;
+
+}
+.SumHeadtable td {
+	border-collapse:collapse;  
+	background: #0066ff;	
+    border-bottom: 1px solid #0066ff;
+}
+/* provide some minimal visual accomodation for IE8 and below */
+.SumHeadtable tr {
+	border-collapse:collapse;  		
+}
+.SumHeadtable td:nth-child(1) {
+	width: 5%;
+    background-color:transparent;
+    border: none;
+}	
+.SumHeadtable td:nth-last-child(1) {
+	width: 5%;
+    background-color:transparent;
+    border: none;
+}	
+/*  Curve background on first and last cell  */
+.SumHeadtable td:nth-child(2) { 
+	border-radius: 22px 0 0 0;
+	background: #0066ff;
+}
+.SumHeadtable td:nth-last-child(2) { 
+	border-radius: 0 22px 0 0 ;
+	background: #0066ff;
+}	
