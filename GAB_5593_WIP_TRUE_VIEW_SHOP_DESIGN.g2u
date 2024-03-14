@@ -1,0 +1,324 @@
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'Hook #38130
+F.Intrinsic.Control.TRY
+	V.Local.SCC.Declare(STRING)
+	f.ODBC.Connection!CON.opencompanyconnection
+	
+	v.Local.ssql.Declare(string)
+	v.Local.sret.Declare(string)
+	v.Local.fret.Declare(float)
+	v.Local.i.Declare(long)
+	v.Local.sHTMLFile.Declare(string)
+	v.Local.sHTML.Declare(string)
+	v.Local.fEstHr.Declare(float)
+	v.Local.fActHr.Declare(float)
+	v.Local.sWorkC.Declare(string)
+	v.Local.sJobnm.Declare(string)
+	v.Local.sSuffx.Declare(string)
+	v.Local.sSeqnc.Declare(string)
+	v.Local.sWDept.Declare(string)
+	v.Local.sdtNme.Declare(string)
+	v.Local.sfile.Declare(string)
+	v.Local.stemp.Declare(string)
+	V.Local.sTDay.Declare(string)
+	v.Local.fIndr.Declare(float)
+	v.Local.dCurrA1.Declare(Date)
+	v.Local.dCurrA2.Declare(Date)
+	v.Local.sCurrA2.Declare(String)
+	V.Local.dCurrA.Declare(date)
+	v.Local.fCurrA.Declare(float)
+	v.Local.dNow.Declare(date)
+	v.Local.ldiff.Declare(long)
+	v.Local.lYear.Declare(long)
+	v.Local.lMonth.Declare(long)
+	v.Local.lDay.Declare(long)
+	v.Local.lHour.Declare(long)
+	v.Local.lMin.Declare(long)
+	v.Local.lSec.Declare(long)
+	v.Local.serror.Declare(string)
+	v.Local.dRetDate.Declare(date)
+	v.Local.sColour.Declare(string)
+	v.Local.sFileLocat.Declare
+	v.Local.bFileCheck.Declare
+	v.Local.sVal.Declare
+	v.Local.sPrior.Declare
+	v.Local.x.Declare(long)
+	v.Local.sJDesc.Declare
+	v.Local.sPartM.Declare
+	v.Local.dDateD.Declare
+	v.Local.sCustN.Declare
+	v.Local.sEmplN.Declare
+	v.Local.sUser6.Declare
+	v.Local.sSearch.Declare
+	v.Local.sWCNme.Declare
+	v.Local.sDateD.Declare
+	v.Local.sProdL.Declare
+	v.Local.bExist.Declare(Boolean)
+	
+	
+	'Create Datatables for all workcentres
+	v.Local.ssql.Set("SELECT DISTINCT UCASE(WC_DEPT) AS WC_DEPT FROM WORKCENTERS where WC_DEPT<>''")
+	f.ODBC.Connection!CON.OpenRecordsetRW("rs",v.Local.ssql)
+	f.Intrinsic.Control.DoUntil(v.ODBC.CON!rs.EOF,=,True)
+		V.Local.sdtNme.Set("dt{0}")
+		f.Intrinsic.String.Build(V.Local.sdtNme,v.ODBC.CON!rs.FieldVal!WC_DEPT,v.Local.sdtNme)
+		f.Data.DataTable.Create(v.Local.sdtNme,true)
+		f.Data.DataTable.AddColumn(v.Local.sdtNme,"EmplName","String")
+		F.Data.DataTable.AddColumn(v.Local.sdtNme,"Job","String")
+		F.Data.DataTable.AddColumn(v.Local.sdtNme,"Suffix","String")
+		F.Data.DataTable.AddColumn(v.Local.sdtNme,"Seq","String")
+		F.Data.DataTable.AddColumn(v.Local.sdtNme,"Workcenter","String")
+		f.Data.DataTable.AddColumn(v.Local.sdtNme,"Estimate","Float")
+		f.Data.DataTable.AddColumn(v.Local.sdtNme,"Actual","Float")
+		f.Data.DataTable.AddColumn(v.Local.sdtNme,"Indirect","Float")
+		F.Data.DataTable.AddColumn(v.Local.sdtNme,"Employee","String")
+		f.Data.DataTable.AddColumn(v.Local.sdtNme,"Department","String")
+		f.Data.DataTable.AddColumn(v.Local.sdtNme,"WCDept","String")
+		f.Data.DataTable.AddColumn(v.Local.sdtNme,"Colour","String")
+		f.ODBC.CON!rs.MoveNext
+	f.Intrinsic.Control.Loop
+	f.ODBC.CON!rs.Close
+	
+	'Check for workcenter list on design department
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5593_CONFIG_DESN.xml",v.Local.sFileLocat)
+	f.Intrinsic.File.Exists(v.Local.sFileLocat,v.Local.bFileCheck)
+	f.Intrinsic.Control.If(v.Local.bFileCheck)
+		f.Data.DataTable.CreateFromXML("dtD",v.Local.sFileLocat,true)
+	f.Intrinsic.Control.EndIf
+	f.Data.DataTable.Create("dtDesign",true)
+	F.Data.DataTable.AddColumn("dtDesign","Priority","String")
+	F.Data.DataTable.AddColumn("dtDesign","Part","String")
+	F.Data.DataTable.AddColumn("dtDesign","Description","String")
+	F.Data.DataTable.AddColumn("dtDesign","Customer","String")
+	F.Data.DataTable.AddColumn("dtDesign","Job","String")
+	F.Data.DataTable.AddColumn("dtDesign","Workcenter","String")
+	F.Data.DataTable.AddColumn("dtDesign","Due","String")
+	f.Data.DataTable.AddColumn("dtDesign","EmplName","String")
+	f.Data.DataTable.AddColumn("dtDesign","User6","String")
+	F.Data.DataTable.AddColumn("dtDesign","Employee","String")
+	f.Data.DataTable.AddColumn("dtDesign","Department","String")
+	f.Data.DataTable.AddColumn("dtDesign","WCDept","String")
+	f.Data.DataTable.AddColumn("dtDesign","Colour","String")
+	f.Data.DataTable.AddColumn("dtDesign","PL","String")
+	
+	'Check for workcenter list on shop department
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5593_CONFIG_SHOP.xml",v.Local.sFileLocat)
+	f.Intrinsic.File.Exists(v.Local.sFileLocat,v.Local.bFileCheck)
+	f.Intrinsic.Control.If(v.Local.bFileCheck)
+		f.Data.DataTable.CreateFromXML("dtS",v.Local.sFileLocat,true)
+	f.Intrinsic.Control.EndIf
+	f.Data.DataTable.Create("dtShopWC",true)
+	f.Data.DataTable.AddColumn("dtShopWC","EmplName","String")
+	F.Data.DataTable.AddColumn("dtShopWC","Job","String")
+	F.Data.DataTable.AddColumn("dtShopWC","Suffix","String")
+	F.Data.DataTable.AddColumn("dtShopWC","Description","String")
+	F.Data.DataTable.AddColumn("dtShopWC","Workcenter","String")
+	f.Data.DataTable.AddColumn("dtShopWC","Estimate","Float")
+	f.Data.DataTable.AddColumn("dtShopWC","Actual","Float")
+	F.Data.DataTable.AddColumn("dtShopWC","Employee","String")
+	f.Data.DataTable.AddColumn("dtShopWC","Department","String")
+	f.Data.DataTable.AddColumn("dtShopWC","WCDept","String")
+	F.Data.DataTable.AddColumn("dtShopWC","Due","String")
+	f.Data.DataTable.AddColumn("dtShopWC","Colour","String")
+	f.Data.DataTable.AddColumn("dtShopWC","Priority","String")
+	F.Data.DataTable.AddColumn("dtShopWC","Customer","String")
+	f.Data.DataTable.AddColumn("dtShopWC","PL","String")
+	
+	'Master Query for it all
+	V.Local.ssql.Set("SELECT A.JOB, A.SUFFIX, A.SEQ, A.EMPLOYEE, A.WORKCENTER, A.EST_HOURS, A.PRIORITY, A.JOB_DESC, B.PART, B.PRODUCT_LINE, (SELECT WC_NAME FROM V_WORKCENTERS W WHERE W.MACHINE=A.WORKCENTER) AS 'WCName', (SELECT NAME_CUSTOMER FROM V_CUSTOMER_MASTER WHERE CUSTOMER=B.CUSTOMER) AS 'Customer', (select name from v_employee_mstr where EMPLOYEE=A.EMPLOYEE) as 'EmplName', (SELECT USER_6 FROM WO_USER_FLDS E WHERE E.JOB=A.JOB AND SUFFIX=B.SUFFIX) as 'User6',(SELECT HoursAppl FROM APSV3_JBLINES F WHERE F.JOB=A.JOB AND F.SFX=A.SUFFIX AND F.SEQ=A.SEQ) AS 'HoursActual', (SELECT DueDate FROM APSV3_JBLINES D WHERE D.JOB=A.JOB AND D.SFX=A.SUFFIX AND D.SEQ=A.SEQ) AS 'DueDateOper' FROM JOBS_IN_PROCESS_G A LEFT JOIN V_JOB_HEADER B ON B.JOB=A.JOB AND B.SUFFIX=A.SUFFIX WHERE JOB_DESC<>'SUSPENDED' AND A.JOB<>'ZINDIR' and A.SEQ<>'996000'")
+	F.Data.DataTable.CreateFromSQL("dtActJobs","con",v.Local.ssql)
+	f.Intrinsic.Control.For(v.Local.i,0,v.DataTable.dtActJobs.Rowcount--,1)
+		f.Intrinsic.Control.If(v.DataTable.dtActJobs(v.Local.i).Employee!FieldValtrim,<>,"")
+			
+			'Set values
+			v.Local.sJobnm.Set(v.DataTable.dtActJobs(v.Local.i).JOB!FieldVal)
+			v.Local.sSuffx.Set(v.DataTable.dtActJobs(v.Local.i).Suffix!Fieldval)
+			v.Local.sSeqnc.Set(v.DataTable.dtActJobs(v.Local.i).Seq!Fieldval)
+			v.Local.sWorkC.Set(v.DataTable.dtActJobs(v.Local.i).Workcenter!FieldValtrim)
+			v.Local.fEstHr.Set(v.DataTable.dtActJobs(v.Local.i).EST_HOURS!Fieldval)
+			v.Local.sPrior.Set(v.DataTable.dtActJobs(v.Local.i).PRIORITY!FIELDVALTRIM)
+			v.Local.sJDesc.Set(v.DataTable.dtActJobs(v.Local.i).JOB_DESC!FIELDVALTRIM)
+			v.Local.sPartM.Set(v.DataTable.dtActJobs(v.Local.i).Part!fieldvaltrim)
+			v.Local.sWCNme.Set(v.DataTable.dtActJobs(v.Local.i).WCName!fieldvaltrim)
+			f.Intrinsic.Control.If(v.DataTable.dtActJobs(v.Local.i).DueDateOper!FIELDVAL,<>,"")
+				v.Local.dDateD.Set(v.DataTable.dtActJobs(v.Local.i).DueDateOper!FIELDVAL)
+			f.Intrinsic.Control.EndIf
+			v.Local.sCustN.Set(v.DataTable.dtActJobs(v.Local.i).Customer!fieldvaltrim)
+			v.Local.sEmplN.Set(v.DataTable.dtActJobs(v.Local.i).EMPLName!fieldvaltrim)
+			v.Local.sUser6.Set(v.DataTable.dtActJobs(v.Local.i).USER6!FIELDVALTRIM)
+			v.Local.fActHr.Set(v.DataTable.dtActJobs(v.Local.i).HoursActual!FIELDVAL)
+			v.Local.sProdL.Set(v.DataTable.dtActJobs(v.Local.i).PRODUCT_LINE!FIELDVAL)
+			
+			'Get Employee Name
+'			v.Local.ssql.Set("SELECT NAME FROM EMPLOYEE_MSTR WHERE EMPLOYEE='{0}'")
+'			F.Intrinsic.String.Build(v.Local.ssql,v.DataTable.dtActJobs(v.Local.i).Employee!FieldVal,v.Local.ssql)
+'			f.ODBC.Connection!CON.ExecuteAndReturn(v.Local.ssql,v.Local.sEmpNm)
+			
+			'Get Estimate
+'			v.Local.ssql.Set("SELECT HOURS_ESTIMATED FROM V_JOB_OPERATIONS WHERE JOB='{0}' AND SUFFIX='{1}' AND SEQ='{2}'")
+'			F.Intrinsic.String.Build(v.Local.ssql,v.Local.sJobnm,v.Local.sSuffx.Trim,v.Local.sSeqnc.Trim,v.Local.ssql)
+			'f.ODBC.Connection!CON.ExecuteAndReturn(v.Local.ssql,v.Local.fEstHr)
+		
+			'Get Actual
+'			v.Local.ssql.Set("SELECT HoursAppl FROM APSV3_JBLINES WHERE JOB='{0}' AND SFX='{1}' AND SEQ='{2}'")
+'			F.Intrinsic.String.Build(v.Local.ssql,v.Local.sJobnm.Trim,v.Local.sSuffx.Trim,v.Local.sSeqnc.Trim,v.Local.ssql)
+'			f.ODBC.Connection!CON.ExecuteAndReturn(v.Local.ssql,v.Local.fActHr)
+			
+			'Get Actual Start Time
+			v.Local.ssql.Set("SELECT START_DATE FROM V_JOBS_IN_PROCESS_G WHERE JOB='{0}' AND SUFFIX='{1}' AND SEQ='{2}' AND EMPLOYEE='{3}' AND JOB_DESC<>'SUSPENDED'")
+			F.Intrinsic.String.Build(v.Local.ssql,v.Local.sJobnm,v.Local.sSuffx.Trim,v.Local.sSeqnc.Trim,v.DataTable.dtActJobs(v.Local.i).Employee!FieldVal,v.Local.ssql)
+			f.ODBC.Connection!CON.ExecuteAndReturn(v.Local.ssql,v.Local.dCurrA1)
+			
+			v.Local.ssql.Set("SELECT START_TIME FROM JOBS_IN_PROCESS_G WHERE JOB='{0}' AND SUFFIX='{1}' AND SEQ='{2}' AND EMPLOYEE='{3}' AND JOB_DESC<>'SUSPENDED'")
+			F.Intrinsic.String.Build(v.Local.ssql,v.Local.sJobnm,v.DataTable.dtActJobs(v.Local.i).Suffix!FieldVal,v.DataTable.dtActJobs(v.Local.i).Seq!FieldVal,v.DataTable.dtActJobs(v.Local.i).Employee!FieldVal,v.Local.ssql)
+			f.ODBC.Connection!CON.ExecuteAndReturn(v.Local.ssql,v.Local.sCurrA2)
+			f.Intrinsic.Date.Year(v.Local.dCurrA1,v.Local.lYear)
+			f.Intrinsic.Date.Month(v.Local.dCurrA1,v.Local.lMonth)
+			f.Intrinsic.Date.Day(v.Local.dCurrA1,v.Local.lDay)
+			f.Intrinsic.Date.ConvertTString(v.Local.sCurrA2,"HH:NN",v.Local.dCurrA2)
+			f.Intrinsic.Date.Hour(v.Local.dCurrA2,v.Local.lHour)
+			f.Intrinsic.Date.Minute(v.Local.dCurrA2,v.Local.lMin)
+			f.Intrinsic.Date.Second(v.Local.dCurrA2,v.Local.lSec)
+			f.Intrinsic.Date.DateTimeSerial(v.Local.lYear,v.Local.lMonth,v.Local.lDay,v.Local.lHour,v.Local.lMin,v.Local.lSec,v.Local.dCurrA)
+			
+			'It works!
+			v.Local.dNow.Set(v.Ambient.Now)
+			f.Intrinsic.Date.DateDiff("N",v.Local.dCurrA,v.Local.dNow,v.Local.lDiff)
+			F.Intrinsic.Control.If(V.Local.ldiff,<>,0)
+				F.Intrinsic.Math.Div(V.Local.ldiff,60,V.Local.ldiff)
+			F.Intrinsic.Control.EndIf
+			f.Intrinsic.Math.Add(v.Local.fActHr,v.Local.ldiff,v.Local.fActHr)
+		
+			'Red or normal
+			f.Intrinsic.Control.If(v.Local.fActHr,>,v.Local.fEstHr)
+				v.Local.sColour.Set("red-cells")
+			f.Intrinsic.Control.Else
+				v.Local.sColour.Set("")
+			f.Intrinsic.Control.EndIf
+			
+			'All Department
+			v.Local.ssql.Set("SELECT WC_DEPT FROM WORKCENTERS WHERE MACHINE='{0}'")
+			F.Intrinsic.String.Build(v.Local.ssql,v.DataTable.dtActJobs(v.Local.i).Workcenter!FieldVal,v.Local.ssql)
+			f.ODBC.Connection!CON.ExecuteAndReturn(v.Local.ssql,v.Local.sWDept)
+			f.Intrinsic.String.Build("dt{0}",V.Local.sWDept,v.Local.sdtNme)
+			F.Intrinsic.Control.If(V.Local.sdtNme.Trim,<>,"dt")
+				f.Data.DataTable.AddRow(v.Local.sdtNme,"Job",v.Local.sJobnm,"Suffix",v.Local.sSuffx,"Seq",v.Local.sSeqnc,"Workcenter",v.Local.sWorkC,"EmplName",v.Local.sEmplN.Trim,"Estimate",v.Local.fEstHr,"Actual",v.Local.fActHr,"Department",v.Local.sWDept,"Indirect",v.Local.fIndr,"Colour",v.Local.sColour)
+			f.Intrinsic.Control.EndIf
+			
+			'Design True View
+			f.Intrinsic.String.Build("WORKCENTRE='{0} - {1}'",v.Local.sWorkC,v.Local.sWCNme,v.Local.sSearch)
+			f.Data.DataTable.Select("dtD",v.Local.sSearch,v.local.sret)
+			f.Intrinsic.Control.If(v.Local.sret.Trim,<>,"***NORETURN***")
+				f.Intrinsic.String.Format(v.Local.dDateD,"DD/MM/YYYY",v.Local.sDateD)
+				f.Data.DataTable.AddRow("dtDesign","Priority",v.Local.sPrior,"Part",v.Local.sPartM,"Description",v.Local.sJDesc,"Customer",v.Local.sCustN,"Job",v.Local.sJobnm,"Workcenter",v.Local.sWorkC,"Due",v.Local.sDateD,"EmplName",v.Local.sEmplN.Trim,"User6",v.local.sUser6,"PL",v.Local.sProdL)
+			f.Intrinsic.Control.EndIf
+			
+			'Shop True View
+			f.Intrinsic.String.Build("WORKCENTRE='{0} - {1}'",v.Local.sWorkC,v.Local.sWCNme,v.Local.sSearch)
+			f.Data.DataTable.Select("dtS",v.Local.sSearch,v.local.sret)
+			f.Intrinsic.Control.If(v.Local.sret.Trim,<>,"***NORETURN***")
+				f.Intrinsic.String.Format(v.Local.dDateD,"DD/MM/YYYY",v.Local.sDateD)
+				f.Data.DataTable.AddRow("dtShopWC","Priority",v.Local.sPrior,"Description",v.Local.sJDesc,"Customer",v.Local.sCustN,"Job",v.Local.sJobnm,"Suffix",v.Local.sSuffx,"Workcenter",v.Local.sWorkC,"Due",v.Local.sDateD,"EmplName",v.Local.sEmplN.Trim,"Estimate",v.Local.fEstHr,"Actual",v.Local.fActHr)
+			f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.Next(v.Local.i)
+	v.Local.i.Set(0)
+
+	'''''''''''''''''''''''''''''''''''''''''''
+	'ALL DEPARTMENT LOGIC''''''''''''''''''''''
+	'''''''''''''''''''''''''''''''''''''''''''
+	'Check if config for department is selected
+	f.Intrinsic.String.Concat(v.Caller.GasDir,"\",V.Caller.CompanyCode,"_GAB_5593_CONFIG_DEPT.txt",v.Local.sFileLocat)
+	f.Intrinsic.File.Exists(v.Local.sFileLocat,v.Local.bFileCheck)
+	f.Intrinsic.Control.If(v.Local.bFileCheck)
+		f.Intrinsic.File.File2String(v.Local.sFileLocat,v.Local.sVal)
+	f.Intrinsic.Control.Else
+		v.Local.sVal.Set(0)
+	f.Intrinsic.Control.EndIf
+	
+	'If department is checked in config file
+	f.Intrinsic.Control.If(v.Local.sVal.trim,=,"1")
+		v.Local.ssql.Set("SELECT DISTINCT UCASE(WC_DEPT) AS WC_DEPT FROM WORKCENTERS where WC_DEPT<>''")
+		f.ODBC.Connection!CON.OpenLocalRecordsetRW("rs",v.Local.ssql)
+		f.Intrinsic.Control.DoUntil(v.ODBC.CON!rs.EOF,=,true)
+			f.Intrinsic.Control.CallSub("NameDept",V.ODBC.CON!rs.FieldVal!WC_DEPT)
+			f.ODBC.CON!rs.MoveNext
+		f.Intrinsic.Control.Loop
+	f.Intrinsic.Control.EndIf
+	
+	'Create a design web page if there are rows
+	f.Intrinsic.Control.If(v.DataTable.dtDesign.RowCount,>,0)
+		f.Intrinsic.Control.CallSub(createPage,"NameDept","Design")
+	f.Intrinsic.Control.EndIf
+	
+	'Create a shop web page if there are rows
+	f.Intrinsic.Control.If(v.DataTable.dtShopWC.RowCount,>,0)
+		f.Intrinsic.Control.CallSub(createPage,"NameDept","ShopWC")
+	f.Intrinsic.Control.EndIf
+	
+	f.ODBC.Connection!CON.Close
+	F.Data.DataTable.Close("dtActJobs")
+	f.Intrinsic.Control.End
+F.Intrinsic.Control.CATCH
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.ODBC.Connection!CON.Close
+	f.Intrinsic.Control.End
+F.Intrinsic.Control.EndTRY
+
+Program.Sub.Main.End
+
+Program.Sub.createPage.Start
+f.Intrinsic.Control.Try
+	v.Local.sdtNme.Declare
+	v.Local.stemp.Declare
+	v.Local.sFile.Declare
+	v.Local.sHTML.Declare
+	v.Local.sret.Declare
+	
+	V.Local.sdtNme.Set("dt{0}")
+	f.Intrinsic.String.Build(v.Local.sdtNme,v.Args.NameDept,v.Local.sdtNme)
+	f.Data.DataTable.RemoveColumn(v.Local.sdtNme,"Employee")
+	f.Data.DataTable.RemoveColumn(v.Local.sdtNme,"Department")
+	f.Data.DataTable.RemoveColumn(v.Local.sdtNme,"WCDept")
+	f.Data.DataTable.RemoveColumn(v.Local.sdtNme,"Colour")
+	f.Data.DataTable.exportHTML(v.Local.sdtNme,"","***usetable***","",true,v.Local.SRET)
+	
+	F.Intrinsic.String.Replace(V.Local.sRet,"<table>","<table class="TFtable" border="0"><tbody>",V.Local.sRet)
+	F.Intrinsic.String.Replace(V.Local.sRet,"</table>","</tbody></table>",V.Local.sRet)
+	
+	'find <td> and replace with <td class="data-cell">
+	F.Intrinsic.String.Build("<td class={0}data-cell{0}>",V.Ambient.DblQuote,V.Local.sTemp)
+	F.Intrinsic.String.Replace(V.Local.sRet,"<td>",V.Local.sTemp,V.Local.sRet)
+	
+	'left and right cells on each row<td>&nbsp;</td>
+	F.Intrinsic.String.Replace(V.Local.sRet,"<tr>","<tr><td class="Empty">&nbsp;</td>",V.Local.sRet)
+	F.Intrinsic.String.Replace(V.Local.sRet,"</tr>","<td class="Last">&nbsp;</td></tr>",V.Local.sRet)
+	
+	F.Intrinsic.String.Build("{0}\GAB\GAS\GAB_5593_WIP_TEMPLATE.html",V.Caller.PluginsDir,v.Local.sFile)
+	'load template
+	F.Intrinsic.File.File2String(V.Local.sFile,V.Local.sHTML)
+	
+	F.Intrinsic.String.Replace(V.Local.sHTML,"#table",V.Local.sRet,V.Local.sHTML)
+	F.Intrinsic.String.Build("<td rowspan="2" class="FF_hdr">{0}",v.Args.NameDept,V.Local.sRet)
+	F.Intrinsic.String.Replace(V.Local.sHTML,"<td rowspan="2" class="FF_hdr">Shop Floor Screen",V.Local.sRet,V.Local.sHTML)
+	F.Intrinsic.String.Build("<title>{0}",v.Args.NameDept,V.Local.sRet)
+	F.Intrinsic.String.Replace(V.Local.sHTML,"<title>Shop Floor Screen",V.Local.sRet,V.Local.sHTML)
+	F.Intrinsic.String.Build("{0}\GAB_5593_{1}_WIP_TEMPLATE.html","C:\inetpub\wwwroot",v.Args.NameDept,V.Local.sFile)
+	
+	F.Intrinsic.File.String2File(V.Local.sfile,v.Local.sHTML)
+	f.Data.DataTable.Close(v.Local.sdtNme)
+f.Intrinsic.control.Catch
+	f.Intrinsic.UI.Msgbox(v.Ambient.ErrorDescription)
+	f.ODBC.Connection!CON.Close
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndTry
+Program.Sub.createPage.end
+
+Program.Sub.Comments.Start
+'MASTER QUERY
+SELECT A.JOB, A.SUFFIX, A.SEQ, A.EMPLOYEE, A.WORKCENTER, A.EST_HOURS, A.PRIORITY, A.JOB_DESC, B.PART, B.PRODUCT_LINE, (SELECT NAME_CUSTOMER FROM V_CUSTOMER_MASTER WHERE CUSTOMER=B.CUSTOMER) AS 'Customer', (select name from v_employee_mstr where EMPLOYEE=A.EMPLOYEE) as 'EmplName', (SELECT USER_6 FROM WO_USER_FLDS E WHERE E.JOB=A.JOB AND SUFFIX=B.SUFFIX) as 'User6',(SELECT HoursAppl FROM APSV3_JBLINES F WHERE F.JOB=A.JOB AND F.SFX=A.SUFFIX AND F.SEQ=A.SEQ) AS 'HoursActual', (SELECT DueDate FROM APSV3_JBLINES D WHERE D.JOB=A.JOB AND D.SFX=A.SUFFIX AND D.SEQ=A.SEQ) AS 'DueDateOper' FROM JOBS_IN_PROCESS_G A LEFT JOIN V_JOB_HEADER B ON B.JOB=A.JOB AND B.SUFFIX=A.SUFFIX WHERE JOB_DESC<>'SUSPENDED' AND A.JOB<>'ZINDIR' and A.SEQ<>'996000'
+Program.Sub.Comments.End
